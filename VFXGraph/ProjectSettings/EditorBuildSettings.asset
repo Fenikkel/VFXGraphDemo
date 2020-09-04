@@ -6,6 +6,6 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/SampleScene.unity
-    guid: cbfe36cfddfde964d9dfce63a355d5dd
+    path: Assets/VFXGraphDemo/HandTrackingOrb/HandTrackingOrb.unity
+    guid: bb7ebf7095fb99948836d5692acd7caf
   m_configObjects: {}

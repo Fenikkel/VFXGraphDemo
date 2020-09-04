@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 17b97ede1cffdff4aa7c819eb280fe02, type: 3}
+  m_Name: Vitaminarte
+  m_EditorClassIdentifier: 
+  NodeLinks:
+  - m_BaseNodeGuid: dba4562e-69ee-414f-a23c-d9d5aed06934
+    m_PortName: Next
+    m_TargetNodeGuid: 8d839377-5c93-44b2-a9ea-69c106d151d3
+  - m_BaseNodeGuid: 8d839377-5c93-44b2-a9ea-69c106d151d3
+    m_PortName: "Ma\xF1ana"
+    m_TargetNodeGuid: 28b62a2e-cdc8-411b-b5ea-4e5eea6ddc3b
+  DialogueNodeData:
+  - m_Guid: 8d839377-5c93-44b2-a9ea-69c106d151d3
+    m_DialogueText: "\xBFQue momento del d\xEDa prefieres?"
+    m_Position: {x: 292, y: 208}
+  - m_Guid: 28b62a2e-cdc8-411b-b5ea-4e5eea6ddc3b
+    m_DialogueText: "Ya que has elegido la ma\xF1ana. \xBFQue prefieres hacer primero?"
+    m_Position: {x: 693, y: 121}
