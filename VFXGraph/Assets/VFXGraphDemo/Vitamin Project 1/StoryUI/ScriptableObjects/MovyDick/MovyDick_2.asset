@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 845adfc4469665e418bea2f0705b6893, type: 3}
+  m_Name: MovyDick_2
+  m_EditorClassIdentifier: 
+  m_Question: "Al llegar all\xED, descubrimos algo ins\xF3lito que sorprendi\xF3
+    a toda la tripulaci\xF3n"
+  m_Answer:
+  - "Se trataba de una peque\xF1a isla llena de hermosas sirenas"
+  - Era una gran ballena varada en la superficie

@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56e8f0cf2c40b764490507b77a22d8ae, type: 3}
+  m_Name: MovyDickBook
+  m_EditorClassIdentifier: 
+  m_BookPages:
+  - {fileID: 11400000, guid: 18bd4f64398e20244b3f18c73b532c99, type: 2}
+  - {fileID: 11400000, guid: 18bd4f64398e20244b3f18c73b532c99, type: 2}
+  - {fileID: 11400000, guid: 18533f48fe5e312479f8264a6bbfa984, type: 2}
+  - {fileID: 11400000, guid: 94f6468b478696e45aa5ca143af84721, type: 2}
+  - {fileID: 11400000, guid: 75580a0bcca084a46b5f36a1700c2ae7, type: 2}
+  - {fileID: 11400000, guid: 75580a0bcca084a46b5f36a1700c2ae7, type: 2}
+  - {fileID: 11400000, guid: e6f598e4d238c4644bcf1cd0dcf99738, type: 2}
+  - {fileID: 11400000, guid: 149ee9ce135a87149a1c610041336635, type: 2}
+  - {fileID: 11400000, guid: 534ca21bd11f7a2408351225a22a89ab, type: 2}
+  - {fileID: 11400000, guid: 534ca21bd11f7a2408351225a22a89ab, type: 2}

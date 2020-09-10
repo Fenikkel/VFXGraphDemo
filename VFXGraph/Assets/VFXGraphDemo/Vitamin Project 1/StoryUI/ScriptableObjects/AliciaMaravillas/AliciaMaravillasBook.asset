@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56e8f0cf2c40b764490507b77a22d8ae, type: 3}
+  m_Name: AliciaMaravillasBook
+  m_EditorClassIdentifier: 
+  m_BookPages:
+  - {fileID: 11400000, guid: 3a375e91992ed3e43af441f16c810787, type: 2}
+  - {fileID: 11400000, guid: 3a375e91992ed3e43af441f16c810787, type: 2}
+  - {fileID: 11400000, guid: d8e5280468fcae84cb9b1e454cedf62a, type: 2}
+  - {fileID: 11400000, guid: 39cb1f8469fc28a4d90f95e82662cb59, type: 2}
+  - {fileID: 11400000, guid: 2c68a1d93cb85a24794add0ea2ade886, type: 2}
+  - {fileID: 11400000, guid: 2c68a1d93cb85a24794add0ea2ade886, type: 2}
+  - {fileID: 11400000, guid: 00cba47366f27254ca58723db4d1de00, type: 2}
+  - {fileID: 11400000, guid: eb69db278b1b2824eb99554bce2e7522, type: 2}
+  - {fileID: 11400000, guid: 534ca21bd11f7a2408351225a22a89ab, type: 2}
+  - {fileID: 11400000, guid: 534ca21bd11f7a2408351225a22a89ab, type: 2}
