@@ -12,6 +12,7 @@ public class StoryBookManager : MonoBehaviour
     public StoryBook[] m_BookPicker; // For 2 to 6 customers
     public StoryBook[] m_StoryBooks; // 0 -> Libro Selva, 1 -> Movi Dick, 2 -> Alicia Maravillas, 3 -> Principito
     public OSC m_OSC;
+    public AnimationsController m_AnimationsController;
 
     [Header("Text Variables")]
     public TextMeshProUGUI m_QuestionText;
@@ -19,9 +20,13 @@ public class StoryBookManager : MonoBehaviour
     public TextMeshProUGUI m_AnswerRightText; // Index 1 -> m_StoryBook.m_BookPages[index].m_Answer[1];
 
     [Header("UI Elements")]
-    public GameObject m_RightButton;
-    public GameObject m_LeftButton;
-    public GameObject m_NextButton;
+    public GameObject m_RightButtonGO;
+    public GameObject m_LeftButtonGO;
+    public GameObject m_NextButtonGO;
+
+    [Header("Canvas group (Panels)")]
+    public CanvasGroup RightAnswer;
+    public CanvasGroup LeftAnswer;
 
     [Header("Phases")]
     private bool m_CustomersSelectorPhase = false; //Select the customers
@@ -43,6 +48,7 @@ public class StoryBookManager : MonoBehaviour
     private int m_RandomRight = -1;
     private bool m_LeftOptionChosen = false;
     private int m_TimesLooped = 0;
+
 
 
     private void ResetVariables()
@@ -67,52 +73,7 @@ public class StoryBookManager : MonoBehaviour
 
     private void Update()
     {
-        if (m_InputActive && m_CustomersSelectorPhase) {
-
-            if (Input.GetKeyDown(KeyCode.Alpha2)) {
-
-                print("2");
-                m_NumberOfExplorers = 2;
-                m_CurrentBookPicker = m_BookPicker[0];
-                StartFirstPhase();
-
-            }
-            else if (Input.GetKeyDown(KeyCode.Alpha3))
-            {
-
-                print("3");
-                m_NumberOfExplorers = 3;
-                m_CurrentBookPicker = m_BookPicker[1];
-                StartFirstPhase();
-
-
-            }
-            else if (Input.GetKeyDown(KeyCode.Alpha4))
-            {
-
-                print("4");
-                m_NumberOfExplorers = 4;
-                m_CurrentBookPicker = m_BookPicker[2];
-                StartFirstPhase();
-
-            }
-            else if (Input.GetKeyDown(KeyCode.Alpha5))
-            {
-
-                print("5");
-                m_NumberOfExplorers = 5;
-                m_CurrentBookPicker = m_BookPicker[3];
-                StartFirstPhase();
-
-            }
-            else if (Input.GetKeyDown(KeyCode.Alpha6))
-            {
-                print("6");
-                m_NumberOfExplorers = 6;
-                m_CurrentBookPicker = m_BookPicker[4];
-                StartFirstPhase();
-            }
-        }
+        CheckInput();
     }
 
 
@@ -128,10 +89,23 @@ public class StoryBookManager : MonoBehaviour
         m_SecondPhase = false;
 
         //Active CustomerSelector 
-        TextWriter.AddWriter_Static(m_QuestionText, "Selecciona número de exploradores por favor", .05f, true);
-        //m_QuestionText.text = "Selecciona número de exploradores por favor";
-        m_InputActive = true;    
+        //TextWriter.AddWriter_Static(m_QuestionText, "Selecciona número de exploradores por favor", .05f, true);
+        m_QuestionText.text = "Selecciona número de exploradores por favor";
+        m_AnimationsController.TriggerSmoke();
+
+        StartCoroutine(ActiveInputWhenSmokeEnds());    
     
+    }
+
+    IEnumerator ActiveInputWhenSmokeEnds() {
+
+        yield return new WaitForSeconds(1);
+
+        while (m_AnimationsController.IsSmokePlaying() == true)
+        {
+            yield return null;
+        }
+        m_InputActive = true;
     }
 
     private void StartFirstPhase() // When the customers select the book
@@ -146,7 +120,7 @@ public class StoryBookManager : MonoBehaviour
 
         if (m_CurrentBookPicker != null && m_QuestionText != null && m_AnswerLeftText != null && m_AnswerRightText != null)
         {
-            PhaseManager(false); //or true we don't care
+            OptionSelected(false); //or true we don't care
         }
         else
         {
@@ -166,34 +140,72 @@ public class StoryBookManager : MonoBehaviour
         if (m_ChosenBook >= 0 && m_ChosenBook <= 3) { //Si se ha elegido mal el libro esto tira para adelante igualmente
 
             m_CurrentStoryBook = m_StoryBooks[m_ChosenBook];
-            PhaseManager(false); //or true, we don't care
+            OptionSelected(false); //or true, we don't care
 
         }
     }
 
-    public void PhaseManager(bool left) {
+    IEnumerator FadeOutButtons() {
+
+        if (m_RightButtonGO.activeSelf && m_LeftButtonGO.activeSelf)
+        {
+            m_AnimationsController.FadeOutButtons();
+        }
+        else if (m_RightButtonGO.activeSelf)
+        {
+
+            m_AnimationsController.FadeOutNextButton();
+
+        }
+        else { 
+        
+        }
+
+
+        yield return new WaitForSeconds(0.25f);
+
+        while (m_AnimationsController.IsRightAnswerPanelFadingOut() == true) // del right botton
+        {
+            yield return null;
+        }
+
+        PhaseManager();
+
+    }
+
+    public void OptionSelected(bool left) {
 
         m_LeftOptionChosen = left;
 
-        if (m_CustomersSelectorPhase) {
+        StartCoroutine(FadeOutButtons());
+
+    }
+
+    private void PhaseManager() {
+
+        if (m_CustomersSelectorPhase)
+        {
 
             print("Nothing");
         }
 
-        else if (m_FirstPhase) {
+        else if (m_FirstPhase)
+        {
 
             BookPickerManager();
 
         }
 
-        else if (m_SecondPhase) {
+        else if (m_SecondPhase)
+        {
 
             StoryManager();
 
         }
 
-
     }
+
+
 
     private void BookPickerManager() {
 
@@ -965,7 +977,7 @@ public class StoryBookManager : MonoBehaviour
                 }
 
                 m_QuestionText.text = storyBook.m_BookPages[index].m_Question;
-
+                m_AnimationsController.TriggerSmoke();
                 ShowNextButton();
 
             }
@@ -979,9 +991,10 @@ public class StoryBookManager : MonoBehaviour
 
                 //Show the new page text
                 m_QuestionText.text = storyBook.m_BookPages[index].m_Question;
+
                 m_AnswerLeftText.text = storyBook.m_BookPages[index].m_Answer[0];
                 m_AnswerRightText.text = storyBook.m_BookPages[index].m_Answer[1];
-
+                m_AnimationsController.TriggerSmoke();
                 ShowChoiceButtons(true);
 
             }
@@ -999,7 +1012,7 @@ public class StoryBookManager : MonoBehaviour
                 m_QuestionText.text = storyBook.m_BookPages[index].m_Question;
                 m_AnswerLeftText.text = storyBook.m_BookPages[index].m_Answer[m_RandomLeft];
                 m_AnswerRightText.text = storyBook.m_BookPages[index].m_Answer[m_RandomRight];
-
+                m_AnimationsController.TriggerSmoke();
                 ShowChoiceButtons(true);
                 
 
@@ -1197,7 +1210,7 @@ public class StoryBookManager : MonoBehaviour
     private void ClearCanvas()
     {
 
-        HideUI(true);
+        //HideUI(true);
         ClearText();
 
     }
@@ -1208,7 +1221,7 @@ public class StoryBookManager : MonoBehaviour
         if (hide)
         {
             ShowChoiceButtons(false);
-            m_NextButton.SetActive(false);
+            m_NextButtonGO.SetActive(false);
         }
     }
 
@@ -1230,19 +1243,59 @@ public class StoryBookManager : MonoBehaviour
         m_AnswerRightText.text = "";
 
     }
+    
 
     private void ShowChoiceButtons(bool active)
     {
+        if (active) {
+            StartCoroutine(FadeInButons());
+        }
+        else{
+            //fade out?
+            m_RightButtonGO.SetActive(false);
+            m_LeftButtonGO.SetActive(false);
+        }
 
-        m_RightButton.SetActive(active);
-        m_LeftButton.SetActive(active);
+
+    }
+
+    IEnumerator FadeInButons() {
+
+        yield return new WaitForSeconds(1);
+
+        while (m_AnimationsController.IsSmokePlaying() == true)
+        {
+            yield return null;
+        }
+
+        //Fade IN!!
+        m_RightButtonGO.SetActive(true);
+        m_LeftButtonGO.SetActive(true);
+        m_AnimationsController.FadeInButtons();
+        
+
+    }
+    IEnumerator FadeInNextButon()
+    {
+
+        yield return new WaitForSeconds(1);
+
+        while (m_AnimationsController.IsSmokePlaying() == true)
+        {
+            yield return null;
+        }
+
+        //Fade IN!!
+        m_NextButtonGO.SetActive(true);
+        m_AnimationsController.FadeInNextButton();
+        //LASERES DETECTORES DESACTIVADOS HASTA QUE TERMINE EL FADEIN
 
     }
 
     private void ShowNextButton()
     {
         HideUI(true);
-        m_NextButton.SetActive(true);
+        StartCoroutine(FadeInNextButon());
         //m_AnswerRightText.text = "Siguiente";
         //m_RightButton.SetActive(true);
         //m_LeftButton.SetActive(false);
@@ -1251,7 +1304,8 @@ public class StoryBookManager : MonoBehaviour
 
     public void NextButtonBehaviour() {
 
-        PhaseManager(m_LeftOptionChosen);
+        //m_AnimationsController.FadeOutNextButton();
+        OptionSelected(m_LeftOptionChosen);
     
     }
 
@@ -1306,5 +1360,60 @@ public class StoryBookManager : MonoBehaviour
         }
 
     }
+
+    private void CheckInput()
+    {
+
+        if (m_InputActive && m_CustomersSelectorPhase)
+        {
+
+            if (Input.GetKeyDown(KeyCode.Alpha2))
+            {
+
+                print("2");
+                m_NumberOfExplorers = 2;
+                m_CurrentBookPicker = m_BookPicker[0];
+                StartFirstPhase();
+
+            }
+            else if (Input.GetKeyDown(KeyCode.Alpha3))
+            {
+
+                print("3");
+                m_NumberOfExplorers = 3;
+                m_CurrentBookPicker = m_BookPicker[1];
+                StartFirstPhase();
+
+
+            }
+            else if (Input.GetKeyDown(KeyCode.Alpha4))
+            {
+
+                print("4");
+                m_NumberOfExplorers = 4;
+                m_CurrentBookPicker = m_BookPicker[2];
+                StartFirstPhase();
+
+            }
+            else if (Input.GetKeyDown(KeyCode.Alpha5))
+            {
+
+                print("5");
+                m_NumberOfExplorers = 5;
+                m_CurrentBookPicker = m_BookPicker[3];
+                StartFirstPhase();
+
+            }
+            else if (Input.GetKeyDown(KeyCode.Alpha6))
+            {
+                print("6");
+                m_NumberOfExplorers = 6;
+                m_CurrentBookPicker = m_BookPicker[4];
+                StartFirstPhase();
+            }
+        }
+
+    }
+
 
 }

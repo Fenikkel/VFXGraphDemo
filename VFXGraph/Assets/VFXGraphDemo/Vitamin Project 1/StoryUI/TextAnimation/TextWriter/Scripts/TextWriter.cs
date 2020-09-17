@@ -33,7 +33,7 @@ public class TextWriter : MonoBehaviour
 
     private void Update()
     {
-        Debug.Log("Number of dialogs active: " + m_TextWriterSingleList.Count);
+        //Debug.Log("Number of dialogs active: " + m_TextWriterSingleList.Count);
 
         //Call the Update of each instance on the list
         for (int i = 0; i < m_TextWriterSingleList.Count; i++)
