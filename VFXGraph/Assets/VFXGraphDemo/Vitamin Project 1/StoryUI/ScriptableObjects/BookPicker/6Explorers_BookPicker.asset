@@ -13,8 +13,6 @@ MonoBehaviour:
   m_Name: 6Explorers_BookPicker
   m_EditorClassIdentifier: 
   m_BookPages:
-  - {fileID: 11400000, guid: 10e61a47f3522ab42bc1e52e29641a90, type: 2}
-  - {fileID: 11400000, guid: 25451fe7ec4962e46817fe6f735ec302, type: 2}
   - {fileID: 11400000, guid: 54d7c372639a1d5429ccb3dbf8319c11, type: 2}
   - {fileID: 11400000, guid: 25451fe7ec4962e46817fe6f735ec302, type: 2}
   - {fileID: 11400000, guid: beb96d113c1d3ea49a924cd552eaeb33, type: 2}

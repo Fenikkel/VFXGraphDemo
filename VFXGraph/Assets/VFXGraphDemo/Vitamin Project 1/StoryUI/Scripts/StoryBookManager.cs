@@ -56,7 +56,7 @@ public class StoryBookManager : MonoBehaviour
 
         m_CurrentBookPicker = null;
         m_CurrentStoryBook = null;
-        m_QuestionIndex = 0;
+        m_QuestionIndex = 1; //Uno porque nos saltamos el prologo
         m_ChosenBook = -1;
         m_NumberOfExplorers = 0;
         m_RandomLeft = -1;
@@ -90,22 +90,21 @@ public class StoryBookManager : MonoBehaviour
 
         //Active CustomerSelector 
         //TextWriter.AddWriter_Static(m_QuestionText, "Selecciona número de exploradores por favor", .05f, true);
-        m_QuestionText.text = "Selecciona número de exploradores por favor";
-        m_AnimationsController.TriggerSmoke();
+        m_QuestionText.text = "Erase una vez, un grupo de aventureros,dispuestos a vivir una experiencia única.";
+        //m_AnimationsController.PlayOpenBook();
+        m_InputActive = true;
 
-        StartCoroutine(ActiveInputWhenSmokeEnds());    
-    
     }
 
-    IEnumerator ActiveInputWhenSmokeEnds() {
+    IEnumerator WaitUntilFadeEnds() // StartBook end
+    {
+        yield return new WaitForSeconds(0.5f);
 
-        yield return new WaitForSeconds(1);
-
-        while (m_AnimationsController.IsSmokePlaying() == true)
-        {
+        while (m_AnimationsController.IsOpenBookEndPlaying() == true) {
             yield return null;
         }
-        m_InputActive = true;
+
+        OptionSelected(false); //or true we don't care
     }
 
     private void StartFirstPhase() // When the customers select the book
@@ -120,7 +119,10 @@ public class StoryBookManager : MonoBehaviour
 
         if (m_CurrentBookPicker != null && m_QuestionText != null && m_AnswerLeftText != null && m_AnswerRightText != null)
         {
+            //m_AnimationsController.PlayOpenBookEnd();
+            //WaitUntilFadeEnds();
             OptionSelected(false); //or true we don't care
+
         }
         else
         {
@@ -145,39 +147,13 @@ public class StoryBookManager : MonoBehaviour
         }
     }
 
-    IEnumerator FadeOutButtons() {
-
-        if (m_RightButtonGO.activeSelf && m_LeftButtonGO.activeSelf)
-        {
-            m_AnimationsController.FadeOutButtons();
-        }
-        else if (m_RightButtonGO.activeSelf)
-        {
-
-            m_AnimationsController.FadeOutNextButton();
-
-        }
-        else { 
-        
-        }
-
-
-        yield return new WaitForSeconds(0.25f);
-
-        while (m_AnimationsController.IsRightAnswerPanelFadingOut() == true) // del right botton
-        {
-            yield return null;
-        }
-
-        PhaseManager();
-
-    }
-
     public void OptionSelected(bool left) {
 
         m_LeftOptionChosen = left;
 
-        StartCoroutine(FadeOutButtons());
+        PhaseManager();
+
+        //StartCoroutine(FadeOutButtons());
 
     }
 
@@ -977,7 +953,7 @@ public class StoryBookManager : MonoBehaviour
                 }
 
                 m_QuestionText.text = storyBook.m_BookPages[index].m_Question;
-                m_AnimationsController.TriggerSmoke();
+                //m_AnimationsController.TriggerSmoke();
                 ShowNextButton();
 
             }
@@ -994,7 +970,7 @@ public class StoryBookManager : MonoBehaviour
 
                 m_AnswerLeftText.text = storyBook.m_BookPages[index].m_Answer[0];
                 m_AnswerRightText.text = storyBook.m_BookPages[index].m_Answer[1];
-                m_AnimationsController.TriggerSmoke();
+                //m_AnimationsController.TriggerSmoke();
                 ShowChoiceButtons(true);
 
             }
@@ -1012,7 +988,7 @@ public class StoryBookManager : MonoBehaviour
                 m_QuestionText.text = storyBook.m_BookPages[index].m_Question;
                 m_AnswerLeftText.text = storyBook.m_BookPages[index].m_Answer[m_RandomLeft];
                 m_AnswerRightText.text = storyBook.m_BookPages[index].m_Answer[m_RandomRight];
-                m_AnimationsController.TriggerSmoke();
+                //m_AnimationsController.TriggerSmoke();
                 ShowChoiceButtons(true);
                 
 
@@ -1263,15 +1239,17 @@ public class StoryBookManager : MonoBehaviour
 
         yield return new WaitForSeconds(1);
 
-        while (m_AnimationsController.IsSmokePlaying() == true)
-        {
-            yield return null;
-        }
+        //while (m_AnimationsController.IsSmokePlaying() == true)
+        //{
+        //    yield return null;
+        //}
 
         //Fade IN!!
+
+        print("Fade in");
         m_RightButtonGO.SetActive(true);
         m_LeftButtonGO.SetActive(true);
-        m_AnimationsController.FadeInButtons();
+        //m_AnimationsController.FadeInButtons();
         
 
     }
@@ -1280,14 +1258,15 @@ public class StoryBookManager : MonoBehaviour
 
         yield return new WaitForSeconds(1);
 
-        while (m_AnimationsController.IsSmokePlaying() == true)
-        {
-            yield return null;
-        }
+        //while (m_AnimationsController.IsSmokePlaying() == true)
+        //{
+        //    yield return null;
+        //}
 
         //Fade IN!!
+        print("Fade in next");
         m_NextButtonGO.SetActive(true);
-        m_AnimationsController.FadeInNextButton();
+       // m_AnimationsController.FadeInNextButton();
         //LASERES DETECTORES DESACTIVADOS HASTA QUE TERMINE EL FADEIN
 
     }

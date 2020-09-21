@@ -1,5 +1,5 @@
 sceneSetups:
-- path: Assets/VFXGraphDemo/Vitamin Project 1/StoryUI/StoryUI.unity
+- path: Assets/VFXGraphDemo/Vitamin Project 1/StoryUI/OnlyStory.unity
   isLoaded: 1
   isActive: 1
   isSubScene: 0

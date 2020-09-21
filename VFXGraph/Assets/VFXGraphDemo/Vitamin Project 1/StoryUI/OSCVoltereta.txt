@@ -1,0 +1,50 @@
+Direcciones OSC:
+
+	Puerto -> 10000
+	Direcciones OSC: 	/Explorers 	-> 	Número de comensales: de 2 a 6
+				/StoryBook 	-> 	Libro escogido:  0 -> Libro Selva, 1 -> Movy Dick, 2 -> Alicia Maravillas, 3 -> Principito
+				/Choices 	->	Las 4 elecciones sobre los libros:
+
+								Libro de la Selva:
+
+									1ª: 	0 -> RayoSol
+										1 -> TormentaTropical
+
+									2ª: 	0 -> TranquiloManantial
+										1 -> Cueva
+
+									3º: 	0 -> OsoJugueton
+										1 -> Tigre
+
+									4º: 	0 -> SeguirCamino
+										1 -> DescansarOEnfrentar
+
+
+								Movy Dick:
+
+									1ª: 	0 -> SolHorizonte
+										1 -> Temporal
+
+									2ª: 	0 -> ExtrañaIsla
+										1 -> AsomandoseSuperficie
+
+									3º: 	0 -> HermosasSirenas
+										1 -> BallenaBarada
+
+									4º: 	0 -> SeguirCamino
+										1 -> Atracar/Cazar (Segun que se haya elegido anteriormente)
+
+
+								Alicia en el pais de las maravillas:
+
+									1ª: 	0 -> MundoMagicoColorido
+										1 -> MundoOscuroTenebroso
+
+									2ª: 	0 -> SeguirCriatura/OjosEnigmaticos (Segun que se haya elegido anteriormente)
+										1 -> Escondernos/SalirCueva
+
+									3º: 	0 -> BanqueteExtrabagante
+										1 -> DesprotegidoSer
+
+									4º: 	0 -> SeguirCamino
+										1 -> DisfrutarFiesta/RescatarSer (Segun que se haya elegido anteriormente)

@@ -1,20 +1,18 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEngine;
 
 public class AnimationsController : MonoBehaviour
 {
-    public Animator m_SmokeAnimator;
-    public Animator m_MaskAnimator;
-    public Animator m_RightAnswerPanelAnimator;
-    public Animator m_LeftAnswerPanelAnimator;
+    public Animator m_BookAnimations;
 
 
     private void Awake()
     {
 
-        if (m_SmokeAnimator == null || m_MaskAnimator == null || m_RightAnswerPanelAnimator == null) {
+        if (m_BookAnimations == null) {
 
             Debug.LogError("Link an animator to the game object");
         
@@ -23,71 +21,98 @@ public class AnimationsController : MonoBehaviour
 
     void Update()
     {
+        //print(IsOpenBookPlaying());
         //Debug smoke
-       /* if (Input.GetKeyDown(KeyCode.Space)) {
+        /* if (Input.GetKeyDown(KeyCode.Space)) {
 
-            //Debug.Log("Spaced");
-            TriggerSmoke();
-        
-        }
+             //Debug.Log("Spaced");
+             TriggerSmoke();
 
-        print(IsSmokePlaying());
-       */
+         }
+
+         print(IsSmokePlaying());
+        */
+        //if (Input.GetKeyDown(KeyCode.Alpha1))
+        //{
+
+        //    m_BookAnimations.SetTrigger("OpenBook");
+
+        //}
+
+        //if (Input.GetKeyDown(KeyCode.Alpha2))
+        //{
+
+        //    m_BookAnimations.SetTrigger("OpenBook_End");
+
+        //}
+
+        //if (Input.GetKeyDown(KeyCode.Alpha3))
+        //{
+        //    m_BookAnimations.SetTrigger("TwoChoices");
+
+        //}
+
+        //if (Input.GetKeyDown(KeyCode.Alpha4))
+        //{
+        //    m_BookAnimations.SetTrigger("TwoChoices_End");
+
+        //}
+
+        //if (Input.GetKeyDown(KeyCode.Alpha5))
+        //{
+        //    m_BookAnimations.SetTrigger("ReadingMode");
+
+        //}
+
+        //if (Input.GetKeyDown(KeyCode.Alpha6))
+        //{
+        //    m_BookAnimations.SetTrigger("ReadingMode_End");
+
+        //}
+
+
     }
 
-    public void FadeInNextButton()
+    public void PlayFadeOutImage() {
+
+        m_BookAnimations.SetTrigger("FadeOutImage");
+    
+    }
+    public void PlayFadeInImage()
     {
-        m_RightAnswerPanelAnimator.SetTrigger("FadeIn");
+        m_BookAnimations.SetTrigger("FadeInImage");
     }
 
-    public void FadeOutNextButton()
+    public void PlayOpenBook() {
+
+        m_BookAnimations.SetTrigger("OpenBook");
+
+    }
+
+    public void PlayOpenBookEnd()
     {
 
-        m_RightAnswerPanelAnimator.SetTrigger("FadeOut");
- 
+        m_BookAnimations.SetTrigger("OpenBook_End");
+
     }
 
-    public void FadeInButtons()
+    public void PlayTwoChoices()
     {
 
-        m_RightAnswerPanelAnimator.SetTrigger("FadeIn");
-        m_LeftAnswerPanelAnimator.SetTrigger("FadeIn");
+        m_BookAnimations.SetTrigger("TwoChoices");
+
     }
 
-    public void FadeOutButtons()
+    public void PlayTwoChoicesEnd()
     {
 
-        m_RightAnswerPanelAnimator.SetTrigger("FadeOut");
-        m_LeftAnswerPanelAnimator.SetTrigger("FadeOut");
+        m_BookAnimations.SetTrigger("TwoChoices_End");
+
     }
 
-    public void TriggerSmoke() {
-
-        m_SmokeAnimator.SetTrigger("Smoke");
-        m_MaskAnimator.SetTrigger("Smoke");
-    }
-
-    public bool IsSmokePlaying() {
-
-
-        if (m_SmokeAnimator.GetCurrentAnimatorStateInfo(0).IsName("DiskSmokeAnim"))
-        {
-
-            return true;
-
-        }
-        else {
-
-            return false;
-        
-        }
-    }
-
-    public bool IsRightAnswerPanelFadingOut()
+    public bool IsOpenBookPlaying() // Not work is OpenBookPlaying don't have exit time (Stays at the last frame)
     {
-
-
-        if (m_RightAnswerPanelAnimator.GetCurrentAnimatorStateInfo(0).IsName("FadeOut"))
+        if (m_BookAnimations.GetCurrentAnimatorStateInfo(0).IsName("OpenBook"))
         {
             return true;
         }
@@ -96,4 +121,103 @@ public class AnimationsController : MonoBehaviour
             return false;
         }
     }
+
+    public bool IsOpenBookEndPlaying() // Not work is OpenBookPlaying don't have exit time (Stays at the last frame)
+    {
+        if (m_BookAnimations.GetCurrentAnimatorStateInfo(0).IsName("OpenBook_End"))
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    public void PlayFadeOutText() {
+
+        m_BookAnimations.SetTrigger("FadeOutText");
+    }
+
+    public void PlayFadeInText()
+    {
+
+        m_BookAnimations.SetTrigger("FadeInText");
+    }
+
+    public void PlayFadeInReading() {
+
+        m_BookAnimations.SetTrigger("FadeInReading");
+
+    }
+
+    public void PlayFadeOutReading()
+    {
+
+        m_BookAnimations.SetTrigger("FadeOutReading");
+
+    }
+
+
+
+    public void FadeInRightPage(RightPageType pageType) {
+
+        switch (pageType)
+        {
+
+            case RightPageType.Reading:
+                PlayFadeInText();
+                break;
+
+            case RightPageType.TwoOptions:
+                PlayFadeInText();
+                break;
+
+            case RightPageType.FourOptions:
+                PlayFadeInText();
+                break;
+
+            case RightPageType.Image:
+                PlayFadeInText();
+                break;
+
+            default:
+                Debug.Log("This page type don't have any animation yet");
+                break;
+
+        }
+
+    }
+
+    public void FadeOutRightPage(RightPageType pageType)
+    {
+
+        switch (pageType)
+        {
+
+            case RightPageType.Reading:
+                PlayFadeOutText();
+                break;
+
+            case RightPageType.TwoOptions:
+                PlayFadeOutText();
+                break;
+
+            case RightPageType.FourOptions:
+                PlayFadeOutText();
+                break;
+
+            case RightPageType.Image:
+                PlayFadeOutText();
+                break;
+
+            default:
+                Debug.Log("This page type don't have any animation yet");
+                break;
+
+        }
+
+    }
+
+
 }
