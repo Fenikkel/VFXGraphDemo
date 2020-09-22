@@ -1,7 +1,17 @@
-Direcciones OSC:
 
-	Puerto -> 10000
-	Direcciones OSC: 	/Explorers 	-> 	Número de comensales: de 2 a 6
+Entrada (Hacia Unity):
+
+	- Puerto -> 3456
+	- Direcciones OSC:	/sensor		-> 	Indice 0: Sensor que está en pin 3 -> Será el sensor de la opción izquierda
+							Indice 1: Sensor que está en pin 2 -> Será el sensor de la opción derecha
+
+
+	
+
+Salida (Hacia TouchDesigner):
+
+	- Puerto -> 10000
+	- Direcciones OSC: 	/Explorers 	-> 	Número de comensales: de 2 a 6
 				/StoryBook 	-> 	Libro escogido:  0 -> Libro Selva, 1 -> Movy Dick, 2 -> Alicia Maravillas, 3 -> Principito
 				/Choices 	->	Las 4 elecciones sobre los libros:
 

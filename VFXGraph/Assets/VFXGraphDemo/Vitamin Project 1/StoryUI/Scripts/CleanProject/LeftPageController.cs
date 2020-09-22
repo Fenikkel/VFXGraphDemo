@@ -8,7 +8,7 @@ public class LeftPageController : MonoBehaviour
 
     public Sprite[] m_LeftPageImages;
     public Image m_Image;
-    private int m_CurrentSpriteIndex = 0;
+    private LeftPageImages m_CurrentSprite;
 
     public void SetAdventurersSprite() {
         
@@ -58,43 +58,58 @@ public class LeftPageController : MonoBehaviour
 
     }
 
-    public void SetSpriteIndex(int newSpriteIndex) {  // 0 -> The jungle book, 1 --> Moby dick
+    public void SetCurrentSprite(LeftPageImages sprite) {  // 0 -> The jungle book, 1 --> Moby dick
 
-        m_CurrentSpriteIndex = newSpriteIndex;
+        m_CurrentSprite = sprite;
 
     }
 
-    public void SetSpriteFromCurrentIndex()
+    public void SetSpriteFromCurrent()
     {
 
-        switch (m_CurrentSpriteIndex)
+        m_Image.sprite = m_LeftPageImages[(int)m_CurrentSprite]; //Este parse FUNCIONA?
+
+        /*
+        switch (m_CurrentSprite)
         {
 
-            case 0:
+            case LeftPageImages.Aventureros:
 
                 SetAdventurersSprite();
 
                 break;
 
-            case 1:
+            case LeftPageImages.ProfundidadesDesconocido:
+
+                SetDepthsOfTheUnknownSprite();
+
+                break;
+
+            case LeftPageImages.EspacioTiempo:
+
+                SetSpaceTimeSprite();
+
+                break;
+
+            case LeftPageImages.Selva:
 
                 SetJungleSprite();
 
                 break;
 
-            case 2:
+            case LeftPageImages.Oceano:
 
                 SetSeaSprite(); ;
 
                 break;
 
-            case 3:
+            case LeftPageImages.Tunel:
 
                 SetTunnelSprite();
 
                 break;
 
-            case 4:
+            case LeftPageImages.Universo:
 
                 SetUniverseSprite();
 
@@ -105,6 +120,7 @@ public class LeftPageController : MonoBehaviour
                 break;
 
         }
+        */
 
 
     }
@@ -117,25 +133,25 @@ public class LeftPageController : MonoBehaviour
 
             case 0:
 
-                m_CurrentSpriteIndex = 3; //Selva
+                m_CurrentSprite = LeftPageImages.Selva; //Selva
 
                 break;
 
             case 1:
 
-                m_CurrentSpriteIndex = 4;
+                m_CurrentSprite = LeftPageImages.Oceano;
 
                 break;
 
             case 2:
 
-                m_CurrentSpriteIndex = 5;
+                m_CurrentSprite = LeftPageImages.Tunel;
 
                 break;
 
             case 3:
 
-                m_CurrentSpriteIndex = 6;
+                m_CurrentSprite = LeftPageImages.Universo;
 
                 break;
 

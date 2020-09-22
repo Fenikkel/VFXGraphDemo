@@ -172,7 +172,7 @@ public class UDPPacketIO
 		}
 		catch (Exception e)
 		{
-			Debug.LogWarning("cannot open udp client interface at port "+localPort);
+			Debug.LogWarning("cannot open udp client interface at port " + localPort);
 			Debug.LogWarning(e);
 		}
 		

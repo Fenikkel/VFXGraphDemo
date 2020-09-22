@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEngine;
+using UnityEngine.iOS;
 
 public class AnimationsController : MonoBehaviour
 {
@@ -73,17 +74,59 @@ public class AnimationsController : MonoBehaviour
 
     }
 
-    public void PlayFadeOutImage() {
+    #region Right Page (Text)
+
+    public void FadeInRightPage(RightPageFadeType pageType) {
+
+        switch (pageType) {
+
+            case RightPageFadeType.SoloQuestion:
+
+                PlayFadeInReading();
+
+                break;
+
+            case RightPageFadeType.TwoAnswers:
+
+                break;
+
+            case RightPageFadeType.BookCoverPage:
+
+                break;
+
+            default:
+                Debug.LogWarning("FadeIn right: This pagetype is not implemented");
+                break;
+        
+        }
+
+    
+    }
+
+    #endregion
+
+    #region Left Page (Image)
+
+    #endregion
+
+
+
+    #region OldAnimations
+
+
+    public void PlayFadeOutImage()
+    {
 
         m_BookAnimations.SetTrigger("FadeOutImage");
-    
+
     }
     public void PlayFadeInImage()
     {
         m_BookAnimations.SetTrigger("FadeInImage");
     }
 
-    public void PlayOpenBook() {
+    public void PlayOpenBook()
+    {
 
         m_BookAnimations.SetTrigger("OpenBook");
 
@@ -134,7 +177,8 @@ public class AnimationsController : MonoBehaviour
         }
     }
 
-    public void PlayFadeOutText() {
+    public void PlayFadeOutText()
+    {
 
         m_BookAnimations.SetTrigger("FadeOutText");
     }
@@ -145,7 +189,8 @@ public class AnimationsController : MonoBehaviour
         m_BookAnimations.SetTrigger("FadeInText");
     }
 
-    public void PlayFadeInReading() {
+    public void PlayFadeInReading()
+    {
 
         m_BookAnimations.SetTrigger("FadeInReading");
 
@@ -160,7 +205,8 @@ public class AnimationsController : MonoBehaviour
 
 
 
-    public void FadeInRightPage(RightPageType pageType) {
+    public void FadeInRightPage(RightPageType pageType)
+    {
 
         switch (pageType)
         {
@@ -219,5 +265,8 @@ public class AnimationsController : MonoBehaviour
 
     }
 
+
+
+    #endregion
 
 }

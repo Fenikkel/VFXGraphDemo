@@ -12,6 +12,7 @@ public class BookManager : MonoBehaviour
     public LeftPageController m_LeftPage;
     public AnimationsController m_AnimationsController;
     public VideoPlayer m_VideoPlayer;
+    public IRSensorController m_IRSensorController;
 
     [Header("Data controllers")]
     public BookSavedData m_SavedData;
@@ -79,7 +80,7 @@ public class BookManager : MonoBehaviour
 
     }
 
-    private void SetPhase( Phases phase) {
+    private void SetPhase( Phases phase) { //Here we can initialize each fase variables
 
         m_CurrentPhase = phase;
 
@@ -88,10 +89,17 @@ public class BookManager : MonoBehaviour
             case Phases.CustomerSelector: //Customers selector phase
 
                 Debug.Log("-----CUSTOMER SELECTOR PHASE-----");
-                m_LeftPage.SetAdventurersSprite();
-                m_LeftPage.SetSpriteIndex(0);
+
+                //Decimos cual sera el proximo sprite (Sin cambiar la imagen)
+                m_LeftPage.SetCurrentSprite(LeftPageImages.Aventureros);
+                // Cambiamos la imagen a partir de m_CurrentSprite
+                m_LeftPage.SetSpriteFromCurrent();
+
                 m_RightPage.WritePage("Erase una vez, un grupo de aventureros,dispuestos a vivir una experiencia única.", "", "");
-                m_InputActive = true;
+
+                m_InputActive = true; //Deberia ser despues del fade In
+
+                //Fade in
                 m_AnimationsController.PlayOpenBook();
                 break;
 
@@ -576,14 +584,14 @@ public class BookManager : MonoBehaviour
                         {
                             m_StupidVariable = -1;
                             nextPageType = m_RightPage.LoadRightPage(m_QuestionIndex * 2);             
-                            m_LeftPage.SetSpriteIndex(1); //m_LeftPage.SetDepthsOfTheUnknownSprite();
+                            m_LeftPage.SetCurrentSprite(LeftPageImages.ProfundidadesDesconocido); //m_LeftPage.SetDepthsOfTheUnknownSprite();
                             StartCoroutine(FadeInNextPage(nextPageType));
                         }
                         else
                         {
                             m_StupidVariable = -2;
                             nextPageType = m_RightPage.LoadRightPage(m_QuestionIndex * 2 + 1);
-                            m_LeftPage.SetSpriteIndex(2);  //m_LeftPage.SetSpaceTimeSprite();
+                            m_LeftPage.SetCurrentSprite(LeftPageImages.EspacioTiempo);  //m_LeftPage.SetSpaceTimeSprite();
                             StartCoroutine(FadeInNextPage(nextPageType));
 
                         }
@@ -598,13 +606,13 @@ public class BookManager : MonoBehaviour
                             {
                                 m_SavedData.SetChosenBook(0); //Libro selva
                                 m_RightPage.SetCurrentFableBook(0);
-                                m_LeftPage.SetSpriteIndex(3); //m_LeftPage.SetJungleSprite();
+                                m_LeftPage.SetCurrentSprite(LeftPageImages.Selva); //m_LeftPage.SetJungleSprite();
                             }
                             else
                             {
                                 m_SavedData.SetChosenBook(1); //Movie dick
                                 m_RightPage.SetCurrentFableBook(1);
-                                m_LeftPage.SetSpriteIndex(4); //m_LeftPage.SetSeaSprite();
+                                m_LeftPage.SetCurrentSprite(LeftPageImages.Oceano); //m_LeftPage.SetSeaSprite();
 
                             }
 
@@ -616,13 +624,13 @@ public class BookManager : MonoBehaviour
                             {
                                 m_SavedData.SetChosenBook(2); //Alici
                                 m_RightPage.SetCurrentFableBook(2);
-                                m_LeftPage.SetSpriteIndex(5); //m_LeftPage.SetTunnelSprite();
+                                m_LeftPage.SetCurrentSprite(LeftPageImages.Tunel); //m_LeftPage.SetTunnelSprite();
                             }
                             else
                             {
                                 m_SavedData.SetChosenBook(3); //Principito
                                 m_RightPage.SetCurrentFableBook(3);
-                                m_LeftPage.SetSpriteIndex(6); //m_LeftPage.SetUniverseSprite();
+                                m_LeftPage.SetCurrentSprite(LeftPageImages.Universo); //m_LeftPage.SetUniverseSprite();
                             }
 
                         }
@@ -664,9 +672,7 @@ public class BookManager : MonoBehaviour
 
         }
 
-
-
-    
+        m_IRSensorController.ActiveSensors(true);
     }
 
     public void StartReadingTime() {
@@ -751,7 +757,13 @@ public class BookManager : MonoBehaviour
 
     public void SetNewImage() {
 
-        m_LeftPage.SetSpriteFromCurrentIndex();
+        m_LeftPage.SetSpriteFromCurrent();
+    
+    }
+
+    public void OnFadeInEnded() { //Triggered at the end of all the fade in animations as an event
+    
+
     
     }
 
