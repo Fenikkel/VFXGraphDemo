@@ -1,13 +1,15 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.InteropServices.WindowsRuntime;
+
 using UnityEngine;
-using UnityEngine.iOS;
+
 
 public class AnimationsController : MonoBehaviour
 {
     public Animator m_BookAnimations;
+
+    private bool m_HoldImageNextFade = false;
 
 
     private void Awake()
@@ -76,21 +78,54 @@ public class AnimationsController : MonoBehaviour
 
     #region Right Page (Text)
 
-    public void FadeInRightPage(RightPageFadeType pageType) {
+    public void FadeInRightPage(RightPageType pageType) {
 
         switch (pageType) {
 
-            case RightPageFadeType.SoloQuestion:
+            case RightPageType.ExplorersSelector:
+
+                PlayFadeInReading();
+                break;
+
+            case RightPageType.Reading:
 
                 PlayFadeInReading();
 
                 break;
 
-            case RightPageFadeType.TwoAnswers:
+            case RightPageType.TwoOptions:
+
+                PlayFadeInText();
 
                 break;
 
-            case RightPageFadeType.BookCoverPage:
+            case RightPageType.FourOptions:
+
+                PlayFadeInText();
+
+                break;
+
+            case RightPageType.OneRandom:
+
+                PlayFadeInReading();
+
+                break;
+
+            case RightPageType.MultipleRandom:
+
+                PlayFadeInReading();
+
+                break;
+
+            case RightPageType.BookCover:
+
+                Debug.LogWarning("FadeIn right: This pagetype is not implemented");
+
+                break;
+
+            case RightPageType.TheEnd:
+
+                PlayFadeInReading();
 
                 break;
 
@@ -103,12 +138,138 @@ public class AnimationsController : MonoBehaviour
     
     }
 
+    public void FadeOutRightPage(RightPageType pageType)
+    {
+
+        switch (pageType)
+        {
+
+            case RightPageType.ExplorersSelector:
+
+                PlayFadeOutReading();
+                break;
+
+            case RightPageType.Reading:
+                PlayFadeOutText();
+                break;
+
+            case RightPageType.TwoOptions:
+                PlayFadeOutText();
+                break;
+
+            case RightPageType.FourOptions:
+                PlayFadeOutText();
+                break;
+
+            case RightPageType.OneRandom:
+
+                PlayFadeOutReading();
+                break;
+
+            case RightPageType.MultipleRandom:
+
+                PlayFadeOutReading();
+                break;
+
+            case RightPageType.BookCover:
+                PlayFadeOutText();
+                break;
+
+            case RightPageType.TheEnd:
+                PlayFadeOutReading();
+                break;
+
+            default:
+                Debug.LogWarning("This page type don't have any animation yet");
+                break;
+
+        }
+
+    }
+
     #endregion
 
     #region Left Page (Image)
 
+    public void FadeInLeftPage(LeftPageType pageType)
+    {
+
+        if (m_HoldImageNextFade)
+        {
+
+            Debug.Log("HOLDING fade in THE IMAGE");
+
+        }
+        else
+        {
+
+            switch (pageType)
+            {
+
+                case LeftPageType.Image:
+
+                    PlayFadeInImage();
+
+                    break;
+
+                case LeftPageType.BookCoverPage:
+
+
+                    Debug.LogWarning("FadeIn right: This pagetype is not implemented");
+
+                    break;
+
+                default:
+                    Debug.LogWarning("FadeIn right: This pagetype is not implemented");
+                    break;
+
+            }
+
+        }
+
+
+    }
+
+    public void FadeOutLeftPage(LeftPageType pageType)
+    {
+        if (m_HoldImageNextFade)
+        {
+
+            Debug.Log("HOLDING fade out THE IMAGE");
+
+        }
+        else
+        {
+
+            switch (pageType)
+            {
+
+                case LeftPageType.Image:
+
+                    PlayFadeOutImage();
+                    break;
+
+                case LeftPageType.BookCoverPage:
+                    Debug.Log("This page type don't have any animation yet");
+                    break;
+
+                default:
+
+                    break;
+
+            }
+
+        }
+
+
+    }
+
     #endregion
 
+    public void SetHoldImage(bool hold)
+    {
+        m_HoldImageNextFade = hold;
+    }
 
 
     #region OldAnimations
@@ -204,66 +365,40 @@ public class AnimationsController : MonoBehaviour
     }
 
 
+    //public void FadeInRightPage(RightPageType rightType)
+    //{
 
-    public void FadeInRightPage(RightPageType pageType)
-    {
+    //    switch (rightType)
+    //    {
+    //        case RightPageType.ExplorersSelector:
+    //            PlayFadeInReading();
+    //            break;
 
-        switch (pageType)
-        {
+    //        case RightPageType.Reading:
+    //            PlayFadeInText();
+    //            break;
 
-            case RightPageType.Reading:
-                PlayFadeInText();
-                break;
+    //        case RightPageType.TwoOptions:
+    //            PlayFadeInText();
+    //            break;
 
-            case RightPageType.TwoOptions:
-                PlayFadeInText();
-                break;
+    //        case RightPageType.FourOptions:
+    //            PlayFadeInText();
+    //            break;
 
-            case RightPageType.FourOptions:
-                PlayFadeInText();
-                break;
+    //        case RightPageType.BookCover:
+    //            PlayFadeInText();
+    //            break;
 
-            case RightPageType.Image:
-                PlayFadeInText();
-                break;
+    //        default:
+    //            Debug.Log("This page type don't have any animation yet");
+    //            break;
 
-            default:
-                Debug.Log("This page type don't have any animation yet");
-                break;
+    //    }
 
-        }
+    //}
 
-    }
 
-    public void FadeOutRightPage(RightPageType pageType)
-    {
-
-        switch (pageType)
-        {
-
-            case RightPageType.Reading:
-                PlayFadeOutText();
-                break;
-
-            case RightPageType.TwoOptions:
-                PlayFadeOutText();
-                break;
-
-            case RightPageType.FourOptions:
-                PlayFadeOutText();
-                break;
-
-            case RightPageType.Image:
-                PlayFadeOutText();
-                break;
-
-            default:
-                Debug.Log("This page type don't have any animation yet");
-                break;
-
-        }
-
-    }
 
 
 

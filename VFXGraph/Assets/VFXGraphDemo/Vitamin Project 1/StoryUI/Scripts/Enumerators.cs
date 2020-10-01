@@ -7,21 +7,6 @@
 
 }
 
-public enum RightPageFadeType { 
-
-    SoloQuestion,
-    TwoAnswers,
-    BookCoverPage
-
-}
-
-public enum LeftPageFadeType
-{
-
-    Image,
-    BookCoverPage
-
-}
 
 public enum LeftPageImages { 
 
@@ -35,13 +20,25 @@ public enum LeftPageImages {
 
 }
 
+public enum LeftPageType
+{
+
+    Image,
+    BookCoverPage
+
+}
+
 public enum RightPageType
 {
 
     Reading,
     TwoOptions,
     FourOptions,
-    Image
+    ExplorersSelector,
+    BookCover,
+    OneRandom,
+    MultipleRandom,
+    TheEnd
 
 }
 
@@ -53,38 +50,38 @@ public enum Book
     Principito
 }
 
-enum SelvaChoices
-{
-    RayoSol,
-    TormentaTropical,
-    TranquiloManantial,
-    Cueva,
-    OsoJugueton,
-    Tigre,
-    SeguirCamino,
-    DescansarOEnfrentar
-}
+//enum SelvaChoices
+//{
+//    RayoSol,
+//    TormentaTropical,
+//    TranquiloManantial,
+//    Cueva,
+//    OsoJugueton,
+//    Tigre,
+//    SeguirCamino,
+//    DescansarOEnfrentar
+//}
 
-enum DickChoices
-{
-    SolHorizonte,
-    Temporal,
-    ExtrañaIsla,
-    AsomandoseSuperficie,
-    HermosasSirenas,
-    BallenaBarada,
-    SeguirCamino,
-    AtracarOCazar
-}
+//enum DickChoices
+//{
+//    SolHorizonte,
+//    Temporal,
+//    ExtrañaIsla,
+//    AsomandoseSuperficie,
+//    HermosasSirenas,
+//    BallenaBarada,
+//    SeguirCamino,
+//    AtracarOCazar
+//}
 
-enum AliciaMaravillas
-{
-    MundoMagicoColorido,
-    MundoOscuroTenebroso,
-    SeguirCriaturaOjosEnigmaticos,
-    EscondernosSalirCueva,
-    BanqueteExtrabagante,
-    DesprotegidoSer,
-    SeguirCamino,
-    DisfrutarFiestaRescatarSer
-}
+//enum AliciaMaravillas
+//{
+//    MundoMagicoColorido,
+//    MundoOscuroTenebroso,
+//    SeguirCriaturaOjosEnigmaticos,
+//    EscondernosSalirCueva,
+//    BanqueteExtrabagante,
+//    DesprotegidoSer,
+//    SeguirCamino,
+//    DisfrutarFiestaRescatarSer
+//}

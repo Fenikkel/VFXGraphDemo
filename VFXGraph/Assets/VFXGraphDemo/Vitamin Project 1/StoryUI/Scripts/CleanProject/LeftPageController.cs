@@ -9,6 +9,8 @@ public class LeftPageController : MonoBehaviour
     public Sprite[] m_LeftPageImages;
     public Image m_Image;
     private LeftPageImages m_CurrentSprite;
+    private LeftPageType m_CurrentLeftPageType;
+
 
     public void SetAdventurersSprite() {
         
@@ -163,5 +165,19 @@ public class LeftPageController : MonoBehaviour
 
 
     }
+
+    public void SetCurrentLeftPageType(LeftPageType leftPageType) {
+
+        m_CurrentLeftPageType = leftPageType;
+
+    }
+
+    public LeftPageType GetCurrentLeftPageType()
+    {
+
+        return m_CurrentLeftPageType;
+
+    }
+
 
 }

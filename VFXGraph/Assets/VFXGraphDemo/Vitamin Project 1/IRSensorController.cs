@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class IRSensorController : MonoBehaviour
 {
     private bool m_SensorsActive = false;
+    private bool m_FirstFrameActive = false;
 
     [Header("Controllers")]
     public BookManager m_BookManager;
@@ -24,25 +25,37 @@ public class IRSensorController : MonoBehaviour
             float leftValue = m_OSCReceiver.GetLeftSensorValue();
             float rightValue = m_OSCReceiver.GetRightSensorValue();
 
-
             m_RightSlider.value = rightValue / 100.0f;
             m_LeftSlider.value = leftValue / 100.0f;
 
-            if (leftValue == 100.0f) {
+            if (m_FirstFrameActive && (leftValue == 100.0f || rightValue == 100.0f))
+            {
 
-                Debug.Log("LEFT SENSOR");
-                m_BookManager.OnOptionSelected(true);
-                ActiveSensors(false);
+                //We wait until both values are less than 100
 
             }
-            else if (rightValue == 100.0f) {
+            else {
 
-                Debug.Log("RIGHT SENSOR");
-                m_BookManager.OnOptionSelected(false);
-                ActiveSensors(false);
+                m_FirstFrameActive = false;
+
+                if (leftValue == 100.0f)
+                {
+
+                    Debug.Log("LEFT SENSOR");
+                    m_BookManager.OnOptionSelected(true);
+                    ActiveSensors(false);
+
+                }
+                else if (rightValue == 100.0f)
+                {
+
+                    Debug.Log("RIGHT SENSOR");
+                    m_BookManager.OnOptionSelected(false);
+                    ActiveSensors(false);
+                }
+
             }
-        
-        
+
         }
     }
 
@@ -52,12 +65,14 @@ public class IRSensorController : MonoBehaviour
 
         if (active)
         {
-
+            m_FirstFrameActive = true;
             Debug.Log("SENSOR ACTIVE");
 
         }
         else
         {
+            m_RightSlider.value = 0.0f;
+            m_LeftSlider.value = 0.0f;
             Debug.Log("SENSOR DISABLED");
         }
 

@@ -32,7 +32,7 @@ public class RightPageController : MonoBehaviour
 
     public RightPageType LoadRightPage(int index) {
 
-        m_CurrentRightPageType = CheckRightPageType(index);
+        //m_CurrentRightPageType = CheckRightPageType(index);
 
         if (index < m_CurrentStoryBook.m_BookPages.Length && m_CurrentStoryBook.m_BookPages[index] != null)
         {
@@ -43,13 +43,16 @@ public class RightPageController : MonoBehaviour
                 case RightPageType.Reading:
 
                     WritePage(m_CurrentStoryBook.m_BookPages[index].m_Question, "", "");
-                    //APAGAR BOTONES AQUI si hay algo
+                    break;
+
+                case RightPageType.TheEnd:
+
+                    WritePage(m_CurrentStoryBook.m_BookPages[index].m_Question, "", "");
                     break;
 
                 case RightPageType.TwoOptions:
 
                     WritePage(m_CurrentStoryBook.m_BookPages[index].m_Question, m_CurrentStoryBook.m_BookPages[index].m_Answer[0], m_CurrentStoryBook.m_BookPages[index].m_Answer[1]);
-                    //ENCENDER BOTONES AQUI si hay algo
                     break;
 
                 case RightPageType.FourOptions:
@@ -60,7 +63,6 @@ public class RightPageController : MonoBehaviour
 
                     //Don't reset the randoms, we use it later
 
-                    //ENCENDER BOTONES AQUI si hay algo
                     break;
 
 
@@ -97,6 +99,37 @@ public class RightPageController : MonoBehaviour
         string allToghether = m_CurrentStoryBook.m_BookPages[pageIndex].m_Question + "\n" + m_CurrentStoryBook.m_BookPages[pageIndex].m_Answer[answerRandomized];
 
         WritePage(allToghether,"","");
+
+        if (answerRandomized == 0) // we set the choice for save later in story manager
+        {
+
+            return true; //Left option was chosen
+
+        }
+        else
+        {
+
+            return false;
+
+        }
+
+
+    }
+
+    public bool RandomizeAndAddPage(int pageIndex) //returns true if the left option was chosen
+    {
+
+        if (m_CurrentStoryBook.m_BookPages[pageIndex].m_Question == "" || m_CurrentStoryBook.m_BookPages[pageIndex].m_Answer[0] == "" || m_CurrentStoryBook.m_BookPages[pageIndex].m_Answer[1] == "")
+        {
+            Debug.LogWarning("You filled all the BookPage scriptable object variables?");
+        }
+
+        System.Random rnd = new System.Random();
+
+        int answerRandomized = rnd.Next(2); // 0 or 1 
+
+        m_QuestionText.text += "\n" + m_CurrentStoryBook.m_BookPages[pageIndex].m_Question + "\n" + m_CurrentStoryBook.m_BookPages[pageIndex].m_Answer[answerRandomized];
+
 
         if (answerRandomized == 0) // we set the choice for save later in story manager
         {
@@ -160,6 +193,14 @@ public class RightPageController : MonoBehaviour
         }
     }
 
+    public void ClearAllText() {
+
+        m_QuestionText.text = "";
+        m_LeftAnswerText.text = "";
+        m_RightAnswerText.text = "";
+
+    }
+
 
 
     #region setters and getters
@@ -189,6 +230,12 @@ public class RightPageController : MonoBehaviour
 
         return m_CurrentRightPageType;
     
+    }
+    public void SetCurrentRightPageType(RightPageType pageType)
+    {
+
+        m_CurrentRightPageType = pageType;
+
     }
 
     public int GetRandomLeft() {

@@ -65,6 +65,8 @@ public class BookManager : MonoBehaviour
         m_QuestionIndex = 0;
 
         m_SavedData.ResetData();
+
+        m_AnimationsController.SetHoldImage(false);
     }
 
 
@@ -75,6 +77,8 @@ public class BookManager : MonoBehaviour
 
         //Reset 
         ResetVariables();
+        m_IRSensorController.ActiveSensors(false);
+
 
         SetPhase(Phases.CustomerSelector);
 
@@ -92,15 +96,26 @@ public class BookManager : MonoBehaviour
 
                 //Decimos cual sera el proximo sprite (Sin cambiar la imagen)
                 m_LeftPage.SetCurrentSprite(LeftPageImages.Aventureros);
+
                 // Cambiamos la imagen a partir de m_CurrentSprite
                 m_LeftPage.SetSpriteFromCurrent();
 
+                //Set pages types
+                m_RightPage.SetCurrentRightPageType(RightPageType.ExplorersSelector);
+                m_LeftPage.SetCurrentLeftPageType(LeftPageType.Image);
+
                 m_RightPage.WritePage("Erase una vez, un grupo de aventureros,dispuestos a vivir una experiencia única.", "", "");
 
-                m_InputActive = true; //Deberia ser despues del fade In
+                //Fade in Hold image
+                m_AnimationsController.SetHoldImage(false);
 
                 //Fade in
-                m_AnimationsController.PlayOpenBook();
+                m_AnimationsController.FadeInRightPage(RightPageType.ExplorersSelector);
+                m_AnimationsController.FadeInLeftPage(LeftPageType.Image);
+
+                //Fade out Hold image
+                m_AnimationsController.SetHoldImage(true);
+
                 break;
 
             case Phases.BookPicker: //Book picker phase
@@ -128,13 +143,13 @@ public class BookManager : MonoBehaviour
     private void SetSelectedCustomers(int numCustomers, int bookPickerIndex)
     {
 
-        m_InputActive = false;
+        EnableKeyboard(false);
         m_SavedData.SetNumberOfExplorers(numCustomers); // n from 2 to 6
         m_RightPage.SetCurrentBookPicker(bookPickerIndex); // n from 0 to 4
 
         SetPhase(Phases.BookPicker); // Start book picker phase
-        m_AnimationsController.PlayFadeOutReading(); //Fade out (Then, when ends will trigger next page)
-        //m_AnimationsController.PlayFadeOutImage(); //conservamos la imagen
+        m_AnimationsController.FadeOutRightPage(RightPageType.ExplorersSelector); //Fade out (Then, when ends will trigger next page)
+         //conservamos la imagen. No hay fade out de la pagina izquierda
 
 
     }
@@ -182,37 +197,74 @@ public class BookManager : MonoBehaviour
 
                 case 0:
 
+                    //SetcurrentPage
+                    m_RightPage.SetCurrentRightPageType(RightPageType.OneRandom);
+                    m_LeftPage.SetCurrentLeftPageType(LeftPageType.Image);
+
+                    //Hold image in fade in
+                    m_AnimationsController.SetHoldImage(false);
+
+                    //Randomize
                     m_LeftOptionChosen = m_RightPage.RandomizePage(m_QuestionIndex * 2); // or 1 we don't care
+
+                    //Save data
                     m_SavedData.SaveChoice(m_QuestionIndex, m_LeftOptionChosen);
-                    m_AnimationsController.PlayFadeInReading();
+
+                    //Fade in
+                    m_AnimationsController.FadeInRightPage(RightPageType.OneRandom);
+                    m_AnimationsController.FadeInLeftPage(LeftPageType.Image);
+
+                    //Hold image in fade out
+                    m_AnimationsController.SetHoldImage(true);
 
                     m_QuestionIndex++;
 
                     break;
 
-                case 1: //FALTA GUARDAR LA OPCIÓ
+                case 1:
+                    
+
+                    //SetcurrentPage
+                    m_RightPage.SetCurrentRightPageType(RightPageType.TwoOptions);
+                    m_LeftPage.SetCurrentLeftPageType(LeftPageType.Image);
+
+                    //Hold image
+                    m_AnimationsController.SetHoldImage(true);
 
                     if (m_LeftOptionChosen) // Left chosen
                     {
 
                         nextPageType = m_RightPage.LoadRightPage(m_QuestionIndex * 2);
-                        StartCoroutine(FadeInNextPage(nextPageType));
+                        //StartCoroutine(FadeInNextPage(nextPageType));
 
                     }
                     else
                     { // right chosen
 
                         nextPageType = m_RightPage.LoadRightPage(m_QuestionIndex * 2 + 1);
-                        StartCoroutine(FadeInNextPage(nextPageType));
+                        //StartCoroutine(FadeInNextPage(nextPageType));
 
                     }
 
                     m_SavedData.SaveChoice(m_QuestionIndex, m_LeftOptionChosen);
+
+                    //Fade in
+                    m_AnimationsController.FadeInRightPage(RightPageType.TwoOptions);
+                    m_AnimationsController.FadeInLeftPage(LeftPageType.Image);
+
                     m_QuestionIndex++;
 
                     break;
 
                 case 2:
+
+
+                    //SetcurrentPage
+                    m_RightPage.SetCurrentRightPageType(RightPageType.OneRandom);
+                    m_LeftPage.SetCurrentLeftPageType(LeftPageType.Image);
+
+                    //Hold image
+                    m_AnimationsController.SetHoldImage(true);
 
                     if (m_LeftOptionChosen) // Left chosen
                     {
@@ -226,9 +278,14 @@ public class BookManager : MonoBehaviour
                         m_LeftOptionChosen = m_RightPage.RandomizePage(m_QuestionIndex * 2 + 1);
 
                     }
-
+                    //Save data
                     m_SavedData.SaveChoice(m_QuestionIndex, m_LeftOptionChosen);
-                    m_AnimationsController.PlayFadeInReading();
+
+                    //Fade in
+                    m_AnimationsController.FadeInRightPage(RightPageType.OneRandom);
+                    m_AnimationsController.FadeInLeftPage(LeftPageType.Image);
+
+
                     m_QuestionIndex++;                 
 
                     break;
@@ -236,6 +293,14 @@ public class BookManager : MonoBehaviour
 
                 case 3:
 
+
+                    //SetcurrentPage
+                    m_RightPage.SetCurrentRightPageType(RightPageType.OneRandom);
+                    m_LeftPage.SetCurrentLeftPageType(LeftPageType.Image);
+
+                    //Hold image
+                    m_AnimationsController.SetHoldImage(true);
+
                     if (m_LeftOptionChosen) // Left chosen
                     {
 
@@ -249,21 +314,197 @@ public class BookManager : MonoBehaviour
 
                     }
 
+                    //Save data
                     m_SavedData.SaveChoice(m_QuestionIndex, m_LeftOptionChosen);
-                    m_AnimationsController.PlayFadeInReading();
+
+                    //Fade in
+                    m_AnimationsController.FadeInRightPage(RightPageType.OneRandom);
+                    m_AnimationsController.FadeInLeftPage(LeftPageType.Image);
+
+
                     m_QuestionIndex++;
-
-                    
-
 
                     break;
 
                 case 4:
 
+                    //SetcurrentPage
+                    m_RightPage.SetCurrentRightPageType(RightPageType.TheEnd);
+                    m_LeftPage.SetCurrentLeftPageType(LeftPageType.Image);
+
+                    //Hold image
+                    m_AnimationsController.SetHoldImage(true);
+
                     nextPageType = m_RightPage.LoadRightPage(m_QuestionIndex * 2);
-                    m_AnimationsController.PlayFadeInReading();
+
+                    //Fade in
+                    m_AnimationsController.FadeInRightPage(RightPageType.TheEnd);
+                    m_AnimationsController.FadeInLeftPage(LeftPageType.Image);
+
+                    //Hold image
+                    m_AnimationsController.SetHoldImage(false);
+
                     m_SavedData.PrintChoices();
+
                     m_QuestionIndex++;
+                    break;
+
+                case 5: //The end
+                    print("HASTA AQUI");
+                    m_SavedData.SendAnswersViaOSC();
+
+                    ResetBook();
+
+                    return;
+
+                default:
+                    Debug.LogWarning("question index out of range?");
+                    break;
+
+            }
+
+        }
+
+        #endregion
+
+
+        #region 3 Customers
+
+        if (m_SavedData.GetNumberOfExplorers() == 3)
+        {
+            RightPageType nextPageType;
+
+            switch (m_QuestionIndex)
+            {
+
+                case 0:
+
+                    //SetcurrentPage
+                    m_RightPage.SetCurrentRightPageType(RightPageType.TwoOptions);
+                    m_LeftPage.SetCurrentLeftPageType(LeftPageType.Image);
+
+                    //Hold image in fade in
+                    m_AnimationsController.SetHoldImage(false);
+
+                    nextPageType = m_RightPage.LoadRightPage(m_QuestionIndex * 2);
+
+                    //Fade in
+                    m_AnimationsController.FadeInRightPage(RightPageType.TwoOptions);
+                    m_AnimationsController.FadeInLeftPage(LeftPageType.Image);
+
+                    //Hold image in fade out
+                    m_AnimationsController.SetHoldImage(true);
+
+                    m_QuestionIndex++;
+                    break;
+
+                case 1:
+
+                    //Save data
+                    m_SavedData.SaveChoice(0, m_LeftOptionChosen);
+
+                    //Clear previous text
+                    m_RightPage.ClearAllText();
+
+                    //Randomize without show it
+                    if (m_LeftOptionChosen) // Left chosen
+                    {
+                        m_LeftOptionChosen = m_RightPage.RandomizeAndAddPage(m_QuestionIndex * 2);
+
+                    }
+                    else
+                    { // right chosen
+
+                        m_LeftOptionChosen = m_RightPage.RandomizeAndAddPage(m_QuestionIndex * 2 + 1);
+
+                    }
+
+
+                    m_QuestionIndex++;
+                    FableStoryPageManager();
+                    break;
+
+                case 2:
+                    //Save data
+                    m_SavedData.SaveChoice(1, m_LeftOptionChosen);
+
+                    //Randomize without show it
+                    if (m_LeftOptionChosen) // Left chosen
+                    {
+                        m_LeftOptionChosen = m_RightPage.RandomizeAndAddPage(m_QuestionIndex * 2);
+
+                    }
+                    else
+                    { // right chosen
+
+                        m_LeftOptionChosen = m_RightPage.RandomizeAndAddPage(m_QuestionIndex * 2 + 1);
+
+                    }
+
+
+                    m_QuestionIndex++;
+                    FableStoryPageManager();
+                    break;
+
+                case 3:
+
+                    //SetcurrentPage
+                    m_RightPage.SetCurrentRightPageType(RightPageType.MultipleRandom);
+                    m_LeftPage.SetCurrentLeftPageType(LeftPageType.Image);
+
+                    //Save data
+                    m_SavedData.SaveChoice(2, m_LeftOptionChosen);
+
+                    //Hold image in fade in
+                    m_AnimationsController.SetHoldImage(true);
+
+                    if (m_LeftOptionChosen) // Left chosen
+                    {
+                        m_LeftOptionChosen = m_RightPage.RandomizeAndAddPage(m_QuestionIndex * 2);
+
+                    }
+                    else
+                    { // right chosen
+
+                        m_LeftOptionChosen = m_RightPage.RandomizeAndAddPage(m_QuestionIndex * 2 + 1);
+
+                    }
+
+                    //Fade in
+                    m_AnimationsController.FadeInRightPage(RightPageType.MultipleRandom);
+                    m_AnimationsController.FadeInLeftPage(LeftPageType.Image);
+
+                    //Hold image in fade out
+                    m_AnimationsController.SetHoldImage(true);
+
+                    m_QuestionIndex++;
+                    break;
+
+
+                case 4:
+
+
+                    //SetcurrentPage
+                    m_RightPage.SetCurrentRightPageType(RightPageType.TheEnd);
+                    m_LeftPage.SetCurrentLeftPageType(LeftPageType.Image);
+
+                    //Save data
+                    m_SavedData.SaveChoice(3, m_LeftOptionChosen);
+
+                    //Hold image in fade in
+                    m_AnimationsController.SetHoldImage(true);
+
+                    nextPageType = m_RightPage.LoadRightPage(m_QuestionIndex * 2);
+
+                    //Fade in
+                    m_AnimationsController.FadeInRightPage(RightPageType.TheEnd);
+                    m_AnimationsController.FadeInLeftPage(LeftPageType.Image);
+
+                    //Hold image in fade out
+                    m_AnimationsController.SetHoldImage(false);
+                    m_QuestionIndex++;
+                    m_SavedData.PrintChoices();
+
                     break;
 
                 case 5: //The end
@@ -283,119 +524,347 @@ public class BookManager : MonoBehaviour
 
         #endregion
 
-        #region 3 Customers
+        #region 4 Customers
 
-        //if (m_NumberOfExplorers == 3)
-        //{
+        if (m_SavedData.GetNumberOfExplorers() == 4)
+        {
+            RightPageType nextPageType;
 
-        //    switch (m_QuestionIndex)
-        //    {
+            switch (m_QuestionIndex)
+            {
 
-        //        case 0:
+                case 0:
 
-        //            LoadPage(m_QuestionIndex * 2, m_StoryBooks[m_ChosenBook]);
-        //            break;
+                    //SetcurrentPage
+                    m_RightPage.SetCurrentRightPageType(RightPageType.TwoOptions);
+                    m_LeftPage.SetCurrentLeftPageType(LeftPageType.Image);
 
-        //        case 1:
+                    //Hold image in fade in
+                    m_AnimationsController.SetHoldImage(false);
 
-        //            if (m_LeftOptionChosen) // Left chosen
-        //            {
+                    nextPageType = m_RightPage.LoadRightPage(m_QuestionIndex * 2);
 
-        //                SaveChoice(m_QuestionIndex * 2);
-        //                RandomizePage(m_QuestionIndex * 2, m_StoryBooks[m_ChosenBook]);
+                    //Fade in
+                    m_AnimationsController.FadeInRightPage(RightPageType.TwoOptions);
+                    m_AnimationsController.FadeInLeftPage(LeftPageType.Image);
 
-        //            }
-        //            else
-        //            { // right chosen
+                    //Hold image in fade out
+                    m_AnimationsController.SetHoldImage(true);
 
-        //                SaveChoice(m_QuestionIndex * 2 + 1);
-        //                RandomizePage(m_QuestionIndex * 2 + 1, m_StoryBooks[m_ChosenBook]);
+                    m_QuestionIndex++;
+                    break;
 
-        //            }
+                case 1:
 
-        //            break;
+                    //SetcurrentPage
+                    m_RightPage.SetCurrentRightPageType(RightPageType.TwoOptions);
+                    m_LeftPage.SetCurrentLeftPageType(LeftPageType.Image);
 
-        //        case 2:
+                    //Save data
+                    m_SavedData.SaveChoice(0, m_LeftOptionChosen);
 
-        //            if (m_LeftOptionChosen) // Left chosen
-        //            {
+                    //Hold image in fade in
+                    m_AnimationsController.SetHoldImage(true);
 
-        //                SaveChoice(m_QuestionIndex * 2);
-        //                RandomizePage(m_QuestionIndex * 2, m_StoryBooks[m_ChosenBook]);
+                    if (m_LeftOptionChosen) // Left chosen
+                    {
 
-        //            }
-        //            else
-        //            { // right chosen
+                        nextPageType = m_RightPage.LoadRightPage(m_QuestionIndex * 2);
 
-        //                SaveChoice(m_QuestionIndex * 2 + 1);
-        //                RandomizePage(m_QuestionIndex * 2 + 1, m_StoryBooks[m_ChosenBook]);
+                    }
+                    else
+                    { // right chosen
+                        nextPageType = m_RightPage.LoadRightPage(m_QuestionIndex * 2 + 1);
+                    }
 
-        //            }
+                    //Fade in
+                    m_AnimationsController.FadeInRightPage(RightPageType.TwoOptions);
+                    m_AnimationsController.FadeInLeftPage(LeftPageType.Image);
 
-        //            break;
+                    //Hold image in fade out
+                    m_AnimationsController.SetHoldImage(true);
 
-        //        case 3: //SOBRA?
+                    m_QuestionIndex++;
+                    break;
 
-        //            if (m_LeftOptionChosen) // Left chosen
-        //            {
+                case 2:
+                    //Save data
+                    m_SavedData.SaveChoice(1, m_LeftOptionChosen);
 
-        //                SaveChoice(m_QuestionIndex * 2);
-        //                RandomizePage(m_QuestionIndex * 2, m_StoryBooks[m_ChosenBook]);
+                    //Clear previous text
+                    m_RightPage.ClearAllText();
 
-        //            }
-        //            else
-        //            { // right chosen
+                    //Randomize without show it
+                    if (m_LeftOptionChosen) // Left chosen
+                    {
+                        m_LeftOptionChosen = m_RightPage.RandomizeAndAddPage(m_QuestionIndex * 2);
 
-        //                SaveChoice(m_QuestionIndex * 2 + 1);
-        //                RandomizePage(m_QuestionIndex * 2 + 1, m_StoryBooks[m_ChosenBook]);
+                    }
+                    else
+                    { // right chosen
 
-        //            }
+                        m_LeftOptionChosen = m_RightPage.RandomizeAndAddPage(m_QuestionIndex * 2 + 1);
 
-        //            break;
+                    }
 
-        //        case 4:
 
-        //            if (m_LeftOptionChosen) // Left chosen
-        //            {
+                    m_QuestionIndex++;
+                    FableStoryPageManager();
+                    break;
 
-        //                SaveChoice(m_QuestionIndex * 2);
+                case 3:
 
-        //            }
-        //            else
-        //            { // right chosen
+                    //SetcurrentPage
+                    m_RightPage.SetCurrentRightPageType(RightPageType.MultipleRandom);
+                    m_LeftPage.SetCurrentLeftPageType(LeftPageType.Image);
 
-        //                SaveChoice(m_QuestionIndex * 2 + 1);
+                    //Save data
+                    m_SavedData.SaveChoice(2, m_LeftOptionChosen);
 
-        //            }
+                    //Hold image in fade in
+                    m_AnimationsController.SetHoldImage(true);
 
-        //            LoadPage(m_QuestionIndex * 2, m_StoryBooks[m_ChosenBook]);
+                    if (m_LeftOptionChosen) // Left chosen
+                    {
+                        m_LeftOptionChosen = m_RightPage.RandomizeAndAddPage(m_QuestionIndex * 2);
 
-        //            break;
+                    }
+                    else
+                    { // right chosen
 
-        //        case 5: //The end
+                        m_LeftOptionChosen = m_RightPage.RandomizeAndAddPage(m_QuestionIndex * 2 + 1);
 
-        //            Debug.Log("The end of the second phase: \n");
+                    }
 
-        //            for (int i = 0; i < m_Choices.Length; i++)
-        //            {
+                    //Fade in
+                    m_AnimationsController.FadeInRightPage(RightPageType.MultipleRandom);
+                    m_AnimationsController.FadeInLeftPage(LeftPageType.Image);
 
-        //                Debug.Log(m_Choices[i]);
+                    //Hold image in fade out
+                    m_AnimationsController.SetHoldImage(true);
 
-        //            }
+                    m_QuestionIndex++;
+                    break;
 
-        //            //ENVIAR ANTES LOS DATOS A PABLO
-        //            SendAnswersViaOSC();
-        //            StartCustomersSelectorsPhase();
 
-        //            break;
+                case 4:
 
-        //        default:
-        //            Debug.LogWarning("question index out of range?");
-        //            break;
 
-        //    }
+                    //SetcurrentPage
+                    m_RightPage.SetCurrentRightPageType(RightPageType.TheEnd);
+                    m_LeftPage.SetCurrentLeftPageType(LeftPageType.Image);
 
-        //}
+                    //Save data
+                    m_SavedData.SaveChoice(3, m_LeftOptionChosen);
+
+                    //Hold image in fade in
+                    m_AnimationsController.SetHoldImage(true);
+
+                    nextPageType = m_RightPage.LoadRightPage(m_QuestionIndex * 2);
+
+                    //Fade in
+                    m_AnimationsController.FadeInRightPage(RightPageType.TheEnd);
+                    m_AnimationsController.FadeInLeftPage(LeftPageType.Image);
+
+                    //Hold image in fade out
+                    m_AnimationsController.SetHoldImage(false);
+                    m_QuestionIndex++;
+                    m_SavedData.PrintChoices();
+
+                    break;
+
+                case 5: //The end
+
+                    m_SavedData.SendAnswersViaOSC();
+                    ResetBook();
+
+                    return;
+
+                default:
+                    Debug.LogWarning("question index out of range?");
+                    break;
+
+            }
+
+        }
+
+        #endregion
+
+        #region 5 Customers
+
+        if (m_SavedData.GetNumberOfExplorers() == 5)
+        {
+            RightPageType nextPageType;
+
+            switch (m_QuestionIndex)
+            {
+
+                case 0:
+
+                    //SetcurrentPage
+                    m_RightPage.SetCurrentRightPageType(RightPageType.TwoOptions);
+                    m_LeftPage.SetCurrentLeftPageType(LeftPageType.Image);
+
+                    //Hold image in fade in
+                    m_AnimationsController.SetHoldImage(false);
+
+                    nextPageType = m_RightPage.LoadRightPage(m_QuestionIndex * 2);
+
+                    //Fade in
+                    m_AnimationsController.FadeInRightPage(RightPageType.TwoOptions);
+                    m_AnimationsController.FadeInLeftPage(LeftPageType.Image);
+
+                    //Hold image in fade out
+                    m_AnimationsController.SetHoldImage(true);
+
+                    m_QuestionIndex++;
+                    break;
+
+                case 1:
+
+                    //SetcurrentPage
+                    m_RightPage.SetCurrentRightPageType(RightPageType.TwoOptions);
+                    m_LeftPage.SetCurrentLeftPageType(LeftPageType.Image);
+
+                    //Save data
+                    m_SavedData.SaveChoice(0, m_LeftOptionChosen);
+
+                    //Hold image in fade in
+                    m_AnimationsController.SetHoldImage(true);
+
+                    if (m_LeftOptionChosen) // Left chosen
+                    {
+
+                        nextPageType = m_RightPage.LoadRightPage(m_QuestionIndex * 2);
+
+                    }
+                    else
+                    { // right chosen
+                        nextPageType = m_RightPage.LoadRightPage(m_QuestionIndex * 2 + 1);
+                    }
+
+                    //Fade in
+                    m_AnimationsController.FadeInRightPage(RightPageType.TwoOptions);
+                    m_AnimationsController.FadeInLeftPage(LeftPageType.Image);
+
+                    //Hold image in fade out
+                    m_AnimationsController.SetHoldImage(true);
+
+                    m_QuestionIndex++;
+                    break;
+
+                case 2:
+
+                    //SetcurrentPage
+                    m_RightPage.SetCurrentRightPageType(RightPageType.TwoOptions);
+                    m_LeftPage.SetCurrentLeftPageType(LeftPageType.Image);
+
+                    //Save data
+                    m_SavedData.SaveChoice(1, m_LeftOptionChosen);
+
+                    //Hold image in fade in
+                    m_AnimationsController.SetHoldImage(true);
+
+                    if (m_LeftOptionChosen) // Left chosen
+                    {
+
+                        nextPageType = m_RightPage.LoadRightPage(m_QuestionIndex * 2);
+
+                    }
+                    else
+                    { // right chosen
+
+                        nextPageType = m_RightPage.LoadRightPage(m_QuestionIndex * 2 + 1);
+
+                    }
+
+                    //Fade in
+                    m_AnimationsController.FadeInRightPage(RightPageType.TwoOptions);
+                    m_AnimationsController.FadeInLeftPage(LeftPageType.Image);
+
+                    //Hold image in fade out
+                    m_AnimationsController.SetHoldImage(true);
+
+                    m_QuestionIndex++;
+                    break;
+
+                case 3:
+
+
+
+                    //SetcurrentPage
+                    m_RightPage.SetCurrentRightPageType(RightPageType.OneRandom);
+                    m_LeftPage.SetCurrentLeftPageType(LeftPageType.Image);
+
+                    //Save data
+                    m_SavedData.SaveChoice(2, m_LeftOptionChosen);
+
+                    //Hold image in fade in
+                    m_AnimationsController.SetHoldImage(true);
+
+                    if (m_LeftOptionChosen) // Left chosen
+                    {
+                        m_LeftOptionChosen = m_RightPage.RandomizePage(m_QuestionIndex * 2);
+
+                    }
+                    else
+                    { // right chosen
+
+                        m_LeftOptionChosen = m_RightPage.RandomizePage(m_QuestionIndex * 2 + 1);
+
+                    }
+
+                    //Fade in
+                    m_AnimationsController.FadeInRightPage(RightPageType.OneRandom);
+                    m_AnimationsController.FadeInLeftPage(LeftPageType.Image);
+
+                    //Hold image in fade out
+                    m_AnimationsController.SetHoldImage(true);
+
+                    m_QuestionIndex++;
+                    break;
+
+
+                case 4:
+
+
+                    //SetcurrentPage
+                    m_RightPage.SetCurrentRightPageType(RightPageType.TheEnd);
+                    m_LeftPage.SetCurrentLeftPageType(LeftPageType.Image);
+
+                    //Save data
+                    m_SavedData.SaveChoice(3, m_LeftOptionChosen);
+
+                    //Hold image in fade in
+                    m_AnimationsController.SetHoldImage(true);
+
+                    nextPageType = m_RightPage.LoadRightPage(m_QuestionIndex * 2);
+
+                    //Fade in
+                    m_AnimationsController.FadeInRightPage(RightPageType.TheEnd);
+                    m_AnimationsController.FadeInLeftPage(LeftPageType.Image);
+
+                    //Hold image in fade out
+                    m_AnimationsController.SetHoldImage(false);
+                    m_QuestionIndex++;
+                    m_SavedData.PrintChoices();
+
+                    break;
+
+                case 5: //The end
+
+                    m_SavedData.SendAnswersViaOSC();
+                    ResetBook();
+
+                    return;
+
+                default:
+                    Debug.LogWarning("question index out of range?");
+                    break;
+
+            }
+
+        }
 
         #endregion
 
@@ -410,85 +879,155 @@ public class BookManager : MonoBehaviour
 
                 case 0:
 
+                    print("6 hasta aqui");
+
+                    //SetcurrentPage
+                    m_RightPage.SetCurrentRightPageType(RightPageType.TwoOptions);
+                    m_LeftPage.SetCurrentLeftPageType(LeftPageType.Image);
+
+                    //Hold image in fade in
+                    m_AnimationsController.SetHoldImage(false);
+
                     nextPageType = m_RightPage.LoadRightPage(m_QuestionIndex * 2);
-                    StartCoroutine(FadeInNextPage(nextPageType));
+
+                    //Fade in
+                    m_AnimationsController.FadeInRightPage(RightPageType.TwoOptions);
+                    m_AnimationsController.FadeInLeftPage(LeftPageType.Image);
+
+                    //Hold image in fade out
+                    m_AnimationsController.SetHoldImage(true);
 
                     m_QuestionIndex++;
                     break;
 
                 case 1:
 
+                    //SetcurrentPage
+                    m_RightPage.SetCurrentRightPageType(RightPageType.TwoOptions);
+                    m_LeftPage.SetCurrentLeftPageType(LeftPageType.Image);
+
+                    //Save data
                     m_SavedData.SaveChoice(0, m_LeftOptionChosen);
+
+                    //Hold image in fade in
+                    m_AnimationsController.SetHoldImage(true);
 
                     if (m_LeftOptionChosen) // Left chosen
                     {
 
                         nextPageType = m_RightPage.LoadRightPage(m_QuestionIndex * 2);
-                        StartCoroutine(FadeInNextPage(nextPageType));
 
                     }
                     else
                     { // right chosen
-
                         nextPageType = m_RightPage.LoadRightPage(m_QuestionIndex * 2 + 1);
-                        StartCoroutine(FadeInNextPage(nextPageType));
-
                     }
+
+                    //Fade in
+                    m_AnimationsController.FadeInRightPage(RightPageType.TwoOptions);
+                    m_AnimationsController.FadeInLeftPage(LeftPageType.Image);
+
+                    //Hold image in fade out
+                    m_AnimationsController.SetHoldImage(true);
 
                     m_QuestionIndex++;
                     break;
 
                 case 2:
 
+                    //SetcurrentPage
+                    m_RightPage.SetCurrentRightPageType(RightPageType.TwoOptions);
+                    m_LeftPage.SetCurrentLeftPageType(LeftPageType.Image);
+
+                    //Save data
                     m_SavedData.SaveChoice(1, m_LeftOptionChosen);
+
+                    //Hold image in fade in
+                    m_AnimationsController.SetHoldImage(true);
 
                     if (m_LeftOptionChosen) // Left chosen
                     {
 
                         nextPageType = m_RightPage.LoadRightPage(m_QuestionIndex * 2);
-                        StartCoroutine(FadeInNextPage(nextPageType));
 
                     }
                     else
                     { // right chosen
 
                         nextPageType = m_RightPage.LoadRightPage(m_QuestionIndex * 2 + 1);
-                        StartCoroutine(FadeInNextPage(nextPageType));
 
                     }
+
+                    //Fade in
+                    m_AnimationsController.FadeInRightPage(RightPageType.TwoOptions);
+                    m_AnimationsController.FadeInLeftPage(LeftPageType.Image);
+
+                    //Hold image in fade out
+                    m_AnimationsController.SetHoldImage(true);
 
                     m_QuestionIndex++;
                     break;
 
-                case 3: 
+                case 3:
 
+
+
+                    //SetcurrentPage
+                    m_RightPage.SetCurrentRightPageType(RightPageType.TwoOptions);
+                    m_LeftPage.SetCurrentLeftPageType(LeftPageType.Image);
+
+                    //Save data
                     m_SavedData.SaveChoice(2, m_LeftOptionChosen);
+
+                    //Hold image in fade in
+                    m_AnimationsController.SetHoldImage(true);
 
                     if (m_LeftOptionChosen) // Left chosen
                     {
 
                         nextPageType = m_RightPage.LoadRightPage(m_QuestionIndex * 2);
-                        StartCoroutine(FadeInNextPage(nextPageType));
 
                     }
                     else
                     { // right chosen
 
                         nextPageType = m_RightPage.LoadRightPage(m_QuestionIndex * 2 + 1);
-                        StartCoroutine(FadeInNextPage(nextPageType));
 
                     }
+
+                    //Fade in
+                    m_AnimationsController.FadeInRightPage(RightPageType.TwoOptions);
+                    m_AnimationsController.FadeInLeftPage(LeftPageType.Image);
+
+                    //Hold image in fade out
+                    m_AnimationsController.SetHoldImage(true);
 
                     m_QuestionIndex++;
                     break;
 
                 case 4:
+                    
 
+                    //SetcurrentPage
+                    m_RightPage.SetCurrentRightPageType(RightPageType.TheEnd);
+                    m_LeftPage.SetCurrentLeftPageType(LeftPageType.Image);
+
+                    //Save data
                     m_SavedData.SaveChoice(3, m_LeftOptionChosen);
 
+                    //Hold image in fade in
+                    m_AnimationsController.SetHoldImage(true);
+
                     nextPageType = m_RightPage.LoadRightPage(m_QuestionIndex * 2);
-                    m_AnimationsController.PlayFadeInReading();
+
+                    //Fade in
+                    m_AnimationsController.FadeInRightPage(RightPageType.TheEnd);
+                    m_AnimationsController.FadeInLeftPage(LeftPageType.Image);
+
+                    //Hold image in fade out
+                    m_AnimationsController.SetHoldImage(false);
                     m_QuestionIndex++;
+                    m_SavedData.PrintChoices();
 
                     break;
 
@@ -518,8 +1057,9 @@ public class BookManager : MonoBehaviour
 
         switch (m_SavedData.GetNumberOfExplorers())
         {
-
+            #region 2 explorers
             case 2:
+
                 RightPageType nextPageType;
 
                 switch (m_QuestionIndex)
@@ -527,25 +1067,48 @@ public class BookManager : MonoBehaviour
 
                     case 0:
 
+                        //SetCurrentPageType
+                        m_RightPage.SetCurrentRightPageType(RightPageType.FourOptions); //just for this case
+                        m_LeftPage.SetCurrentLeftPageType(LeftPageType.Image);
+
+                        //Hold image in fade in
+                        m_AnimationsController.SetHoldImage(true);
+
                         nextPageType = m_RightPage.LoadRightPage(m_QuestionIndex * 2);
-                        StartCoroutine(FadeInNextPage(nextPageType));
+
+                        //Fade in
+                        m_AnimationsController.FadeInRightPage(m_RightPage.GetCurrentRightPageType());
+                        m_AnimationsController.FadeInLeftPage(m_LeftPage.GetCurrentLeftPageType());
+
+                        //Hold image in fade out
+                        m_AnimationsController.SetHoldImage(false);
+
                         break;
 
                     case 1:
 
                         if (m_LeftOptionChosen)
                         {
+                            //Save data
                             m_SavedData.SetChosenBook(m_RightPage.GetRandomLeft());
                             m_RightPage.SetCurrentFableBook(m_RightPage.GetRandomLeft());
+
+                            //Set left page image
                             m_LeftPage.SetCurrentIndexFromRandomBookIndex(m_RightPage.GetRandomLeft());
+                            m_LeftPage.SetSpriteFromCurrent();
+
                             print("Chosen book: " + m_SavedData.GetChosenBook());
                         }
                         else
                         {
-
+                            // Save data
                             m_SavedData.SetChosenBook(m_RightPage.GetRandomRight());
                             m_RightPage.SetCurrentFableBook(m_RightPage.GetRandomRight());
+
+                            //Set left page image
                             m_LeftPage.SetCurrentIndexFromRandomBookIndex(m_RightPage.GetRandomRight());
+                            m_LeftPage.SetSpriteFromCurrent();
+
                             print("Chosen book: " + m_SavedData.GetChosenBook());
 
                         }
@@ -563,6 +1126,7 @@ public class BookManager : MonoBehaviour
                 m_QuestionIndex++;
 
                 break;
+            #endregion
 
             case 3: //The same for 3 to 6 explorers
             case 4:
@@ -574,27 +1138,64 @@ public class BookManager : MonoBehaviour
 
                     case 0: //Primera pagina
 
+                        //SetCurrentPageType
+                        m_RightPage.SetCurrentRightPageType(RightPageType.TwoOptions); 
+                        m_LeftPage.SetCurrentLeftPageType(LeftPageType.Image);
+
+
+
+                        //Hold image in fade in
+                        m_AnimationsController.SetHoldImage(true);
+
                         nextPageType = m_RightPage.LoadRightPage(m_QuestionIndex * 2);
-                        StartCoroutine(FadeInNextPage(nextPageType));
+
+
+                        //Fade in
+                        m_AnimationsController.FadeInRightPage(m_RightPage.GetCurrentRightPageType());
+                        m_AnimationsController.FadeInLeftPage(m_LeftPage.GetCurrentLeftPageType());
+
+                        //Hold image in fade out
+                        m_AnimationsController.SetHoldImage(false);
+
                         break;
 
                     case 1:
 
+                        //SetCurrentPageType
+                        m_RightPage.SetCurrentRightPageType(RightPageType.TwoOptions);
+                        m_LeftPage.SetCurrentLeftPageType(LeftPageType.Image);
+
+                        //Hold image in fade in
+                        m_AnimationsController.SetHoldImage(false);
+
                         if (m_LeftOptionChosen)
                         {
                             m_StupidVariable = -1;
-                            nextPageType = m_RightPage.LoadRightPage(m_QuestionIndex * 2);             
-                            m_LeftPage.SetCurrentSprite(LeftPageImages.ProfundidadesDesconocido); //m_LeftPage.SetDepthsOfTheUnknownSprite();
-                            StartCoroutine(FadeInNextPage(nextPageType));
+                            nextPageType = m_RightPage.LoadRightPage(m_QuestionIndex * 2);     
+                            
+                            //Set current sprite
+                            m_LeftPage.SetCurrentSprite(LeftPageImages.ProfundidadesDesconocido);
                         }
                         else
                         {
                             m_StupidVariable = -2;
                             nextPageType = m_RightPage.LoadRightPage(m_QuestionIndex * 2 + 1);
-                            m_LeftPage.SetCurrentSprite(LeftPageImages.EspacioTiempo);  //m_LeftPage.SetSpaceTimeSprite();
-                            StartCoroutine(FadeInNextPage(nextPageType));
+
+                            //Set current sprite
+                            m_LeftPage.SetCurrentSprite(LeftPageImages.EspacioTiempo);
 
                         }
+
+                        //Set the sprite in the image
+                        m_LeftPage.SetSpriteFromCurrent();
+
+                        //Fade in
+                        m_AnimationsController.FadeInRightPage(m_RightPage.GetCurrentRightPageType());
+                        m_AnimationsController.FadeInLeftPage(m_LeftPage.GetCurrentLeftPageType());
+
+                        //Hold image in fade out
+                        m_AnimationsController.SetHoldImage(false);
+
                         break;
 
                     case 2:
@@ -636,7 +1237,12 @@ public class BookManager : MonoBehaviour
                         }
                         print("Chosen book: " + m_SavedData.GetChosenBook());
 
+                        //Set the sprite in the image
+                        m_LeftPage.SetSpriteFromCurrent();
+
                         SetPhase(Phases.Story);
+
+
 
                         return;
 
@@ -658,6 +1264,18 @@ public class BookManager : MonoBehaviour
     }
 
 
+    private void WaitBetweenFadesTriggerer() {
+
+        StartCoroutine(WaitBetweenFades());
+    
+    }
+
+    IEnumerator WaitBetweenFades() {
+        print("WaitingBetweenFades");
+        yield return new WaitForSeconds(m_SecondsBetweenFades);
+
+        NextRightPage();
+    }
 
     IEnumerator FadeInNextPage(RightPageType pageType) {
 
@@ -693,14 +1311,28 @@ public class BookManager : MonoBehaviour
 
     }
 
+
+    IEnumerator ReadingTime()
+    {
+        Debug.Log("WAITING FOR READING");
+        yield return new WaitForSeconds(m_SecondsForReading);
+
+        m_AnimationsController.FadeOutLeftPage(m_LeftPage.GetCurrentLeftPageType());
+        m_AnimationsController.FadeOutRightPage(m_RightPage.GetCurrentRightPageType());
+
+
+    }
+
     public void OnOptionSelected(bool leftChosen) {
 
         m_LeftOptionChosen = leftChosen;
 
+        m_IRSensorController.ActiveSensors(false);
+
         //fade out the page
         m_AnimationsController.FadeOutRightPage(m_RightPage.GetCurrentRightPageType());
-        m_AnimationsController.PlayFadeOutImage();
-        m_LeftPage.SetTunnelSprite();
+
+        m_AnimationsController.FadeOutLeftPage(m_LeftPage.GetCurrentLeftPageType());
 
 
     }
@@ -713,9 +1345,7 @@ public class BookManager : MonoBehaviour
     private void CheckInput()
     {
 
-
-
-        if (m_InputActive && m_CurrentPhase == 0)
+        if (m_InputActive && m_CurrentPhase == Phases.CustomerSelector)
         {
 
             if (Input.GetKeyDown(KeyCode.Alpha2))
@@ -761,10 +1391,63 @@ public class BookManager : MonoBehaviour
     
     }
 
-    public void OnFadeInEnded() { //Triggered at the end of all the fade in animations as an event
-    
+    public void OnRightFadeInEnded() { //Triggered at the end of all the fade in animations as an event
 
+        switch (m_RightPage.GetCurrentRightPageType()) {
+
+            case RightPageType.ExplorersSelector:
+
+                EnableKeyboard(true);
+
+                break;
+
+            case RightPageType.OneRandom:
+
+                StartCoroutine(ReadingTime());
+
+                break;
+
+            case RightPageType.MultipleRandom:
+
+                StartCoroutine(ReadingTime());
+
+                break;
+
+            case RightPageType.TheEnd:
+
+                StartCoroutine(ReadingTime());
+
+                break;
+
+            default:
+                Debug.LogWarning("Right page type not implemented");
+                break;
+        
+        }
+            
+    }
+
+    private void EnableKeyboard(bool enable) {
+
+        m_InputActive = enable;
+
+        //Debug
+        if (enable)
+        {
+            Debug.Log("Keyboard ENABLED");
+        }
+        else {
+            Debug.Log("Keyboard DISABLED");
+        }
+
+
+    }
+
+    public void EnableSensors() { //Called at the end of FadeInText
+
+        m_IRSensorController.ActiveSensors(true);
     
     }
+
 
 }
